@@ -1,49 +1,21 @@
-import torch
-from torchvision import transforms
-from PIL import Image
+import os
 
-# Define the YOLO model class
-class YOLOModel(torch.nn.Module):
-    def __init__(self, model_path):
-        super(YOLOModel, self).__init__()
-        self.model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+def read_text(folder_path):
+    file_contents = []  # This will store contents of all text files
 
-    def forward(self, x):
-        return self.model(x)
+    # Iterate over all items in the folder (both files and subfolders)
+    for root, dirs, files in os.walk(folder_path):
+        for file_name in files:
+            if file_name.endswith(".txt"):  # Check if the file is a text file
+                file_path = os.path.join(root, file_name)
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as file:
+                        # Read the contents of the file
+                        contents = file.read()
+                        file_contents.append(contents)  # Append file contents to list
+                except Exception as e:
+                    print(f"Error reading file {file_path}: {e}")
 
-# Function to count objects in an image
-def count_objects(image_path, classes_of_interest):
-    # Load and preprocess the image
-    image = Image.open(image_path)
-    transform = transforms.Compose([transforms.ToTensor()])
-    input_tensor = transform(image).unsqueeze(0)
+    print(file_contents)
 
-    # Load the YOLO model
-    model = YOLOModel(model_path="")
-
-    # Perform inference
-    with torch.no_grad():
-        outputs = model(input_tensor)
-
-    # Get predicted labels and counts
-    predicted_labels = outputs[0]['class_labels']
-    predicted_counts = {class_name: 0 for class_name in classes_of_interest}
-
-    # Count objects of interest
-    for label in predicted_labels:
-        if label in classes_of_interest:
-            predicted_counts[label] += 1
-
-    # Print counts
-    for class_name, count in predicted_counts.items():
-        print(f"Number of {class_name}s detected: {count}")
-
-if __name__ == "__main__":
-    # Define the path to your input image
-    input_image_path = "urban_app/roundabout_015.jpg"
-
-    # Define the classes of interest
-    classes_to_count = ["bridge", "freeway", "intersection", "roundabout"]
-
-    # Call the function to count objects
-    count_objects(input_image_path, classes_to_count)
+read_text("urban_app/static/Output")

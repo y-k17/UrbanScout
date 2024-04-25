@@ -114,9 +114,13 @@
             <h2>Accuracy</h2>
             <p>{{ accuracy }}</p>
         </div>
+        
         <br><br><br><br><br>
         {% endfor %}
-        
+        <div class="traffic">
+            <h2>Traffic Level</h2>
+            <p>{{ tlvl }}</p>
+        </div>
         <a href="{% url 'display_test_page' %}">Back to Test Page</a>
     </div>
 </body>

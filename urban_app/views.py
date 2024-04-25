@@ -23,6 +23,8 @@ from ultralytics import YOLO
 from PIL import Image
 from tensorflow.keras.models import model_from_json
 import matplotlib.pyplot as plt
+import shutil
+from collections import Counter
 
 
 model=YOLO("Models/best.pt")
@@ -200,21 +202,36 @@ def perform_classification(image_array):
     prediction_accuracy = prediction[0][predicted_index]
     return predicted_label[0],prediction_accuracy
 
+def read_text(folder_path):
+    file_contents = []  # This will store contents of all text files
+
+    # Iterate over all items in the folder (both files and subfolders)
+    for root, dirs, files in os.walk(folder_path):
+        for file_name in files:
+            if file_name.endswith(".txt"):  # Check if the file is a text file
+                file_path = os.path.join(root, file_name)
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as file:
+                        # Read the contents of the file
+                        contents = file.read()
+                        file_contents.append(contents)  # Append file contents to list
+                except Exception as e:
+                    print(f"Error reading file {file_path}: {e}")
+    labels_detected = [s[0] for s in file_contents]
+    return(labels_detected)
+
 def perform_object_detection(image_array, output_dir):
-    # Placeholder for object detection logic (replace with actual implementation)
-    # Assuming `model` performs object detection and saves the result
-    
+
     # Convert RGB to BGR for OpenCV compatibility (cv2.imwrite expects BGR)
     image_bgr = cv2.cvtColor(image_array, cv2.COLOR_RGB2BGR)
 
 
     # Call iyour object detection model with the input image array
 
-    processed_image = model(image_bgr, save=True, project=output_dir, exist_ok=True)
-
+    processed_image = model(image_bgr, save=True, project=output_dir, exist_ok=True, save_txt=True)
+    print(processed_image)
     # Generate a unique filename for the processed image
     output_filename = os.path.join(output_dir, f"predict/image0.jpg")
-    print(output_filename)
     cv2.imwrite(image_bgr, output_filename)
 
     # Save the processed image (assuming `processed_image` is the result of object detection)
@@ -226,7 +243,7 @@ def upload_file(request):
     if request.method == 'POST' and request.FILES['file']:
         # Retrieve the uploaded file
         f2 = request.FILES['file']
-        
+        shutil.rmtree("urban_app/static/Output")
         # Load the uploaded image using PIL
         uploaded_image = Image.open(f2)
         width, height = uploaded_image.size
@@ -237,6 +254,7 @@ def upload_file(request):
         sub_width = width // number
         sub_height = height // number
         k=0
+
         for i in range(number):
             for j in range(number):
                 k=k+1
@@ -249,25 +267,37 @@ def upload_file(request):
 
                 # Perform classification on the sub-image
                 label,accuracy = perform_classification(sub_image_array)
-                print(label)
 
                 # Perform object detection and retrieve processed data
                 output_filename= perform_object_detection(sub_image_array, f"urban_app/static/Output/Test{(k)}")
                 output_filename = output_filename[17:]
-                print("\n\n\n*******************" + output_filename + "*********************\n\n\n")
 
                 description = class_descriptions[label]
                 recommendation = recommendations[label]
 
                 # Append results for the current sub-image
                 sub_images.append((sub_image_array, label,accuracy, output_filename, description, recommendation))
+
+        objects=read_text("urban_app/static/Output")
+        bri=objects.count("0")
+        fre=objects.count("1")
+        inter=objects.count("2")
+        rou=objects.count("3")
+
+        tlvl="None"
+        tfactor=fre+rou-inter-bri
+        if(tfactor==0):
+            tlvl="Average"
+        elif(tfactor>1):
+            tlvl="Good"
+        else:
+            tlvl="Poor"
         
-        # Prepare context data to pass to the template
+        print(tlvl)
         context = {
             "results": sub_images,
+            "tlvl": tlvl,
         }
-
-        print(context)
 
         return render(request, 'resultpage.html', context)
     

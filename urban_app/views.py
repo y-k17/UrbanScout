@@ -195,8 +195,10 @@ def perform_classification(image_array):
 
     # Perform prediction using the loaded model
     prediction = loaded_model.predict(input_image)
+    predicted_index = np.argmax(prediction)
     predicted_label = label_encoder.inverse_transform([np.argmax(prediction)])
-    return predicted_label[0]
+    prediction_accuracy = prediction[0][predicted_index]
+    return predicted_label[0],prediction_accuracy
 
 def perform_object_detection(image_array, output_dir):
     # Placeholder for object detection logic (replace with actual implementation)
@@ -219,7 +221,6 @@ def perform_object_detection(image_array, output_dir):
     cv2.imwrite(output_filename, processed_image)
     
     return output_filename
-
 
 def upload_file(request):
     if request.method == 'POST' and request.FILES['file']:
@@ -247,7 +248,7 @@ def upload_file(request):
                 sub_image_array = np.array(sub_image)
 
                 # Perform classification on the sub-image
-                label = perform_classification(sub_image_array)
+                label,accuracy = perform_classification(sub_image_array)
                 print(label)
 
                 # Perform object detection and retrieve processed data
@@ -259,7 +260,7 @@ def upload_file(request):
                 recommendation = recommendations[label]
 
                 # Append results for the current sub-image
-                sub_images.append((sub_image_array, label, output_filename, description, recommendation))
+                sub_images.append((sub_image_array, label,accuracy, output_filename, description, recommendation))
         
         # Prepare context data to pass to the template
         context = {

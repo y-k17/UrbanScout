@@ -89,7 +89,7 @@
     <div class="container">
         <h1>Result</h1>
         
-        {% for sub_image_array, label, output_filename, description, recommendation in results %}
+        {% for sub_image_array, label,accuracy, output_filename, description, recommendation in results %}
         <div class="result-info">
             <label>Sub-Image Class:</label>
             <span>{{ label }}</span>
@@ -109,6 +109,10 @@
         <div class="recommendation">
             <h2>Recommendation</h2>
             <p>{{ recommendation }}</p>
+        </div>
+        <div class="accuracy">
+            <h2>Accuracy</h2>
+            <p>{{ accuracy }}</p>
         </div>
         <br><br><br><br><br>
         {% endfor %}

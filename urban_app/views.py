@@ -63,6 +63,9 @@ def show_home_admin(request):
 def show_meta_page(request):
     return render(request,'metatestpage.html') 
 
+def show_traffic_page(request):
+    return render(request,'traffictest.html') 
+
 @never_cache
 def show_emergency(request):
 
@@ -153,6 +156,7 @@ def upload_metaimg(request):
     return render(request,'metadisplaypage.html',{"info":m_data}) 
 
 
+
 @never_cache
 def display_test_page(request):
     
@@ -239,11 +243,70 @@ def perform_object_detection(image_array, output_dir):
     
     return output_filename
 
-def upload_file(request):
+
+def upload_traffic(request):
     if request.method == 'POST' and request.FILES['file']:
         # Retrieve the uploaded file
         f2 = request.FILES['file']
         shutil.rmtree("urban_app/static/Output")
+        # Load the uploaded image using PIL
+        uploaded_image = Image.open(f2)
+        width, height = uploaded_image.size
+        
+        # Divide the image into a  grid
+        number = int(request.POST['number'])
+        sub_images = []
+        sub_width = width // number
+        sub_height = height // number
+        k=0
+
+        for i in range(number):
+            for j in range(number):
+                k=k+1
+                # Define the region to crop (left, upper, right, lower)
+                box = (j * sub_width, i * sub_height, (j + 1) * sub_width, (i + 1) * sub_height)
+                # Crop the sub-image
+                sub_image = uploaded_image.crop(box)
+                # Convert PIL Image to numpy array
+                sub_image_array = np.array(sub_image)
+
+                # Perform classification on the sub-image
+                label,accuracy = perform_classification(sub_image_array)
+
+                # Perform object detection and retrieve processed data
+                output_filename= perform_object_detection(sub_image_array, f"urban_app/static/Output/Test{(k)}")
+                output_filename = output_filename[17:]
+
+        objects=read_text("urban_app/static/Output")
+        bri=objects.count("0")
+        fre=objects.count("1")
+        inter=objects.count("2")
+        rou=objects.count("3")
+
+        tlvl="None"
+        tfactor=fre+rou-inter-bri
+        if(tfactor==0):
+            tlvl="Average"
+        elif(tfactor>1):
+            tlvl="Good"
+        else:
+            tlvl="Poor"
+        
+        print(tlvl)
+        context = {
+            "tlvl": tlvl,
+        }
+
+        return render(request, 'trafficresult.html', context)
+    
+    else:
+        return render(request, 'upload.html')
+
+
+def upload_file(request):
+    if request.method == 'POST' and request.FILES['file']:
+        # Retrieve the uploaded file
+        f2 = request.FILES['file']
         # Load the uploaded image using PIL
         uploaded_image = Image.open(f2)
         width, height = uploaded_image.size
@@ -278,25 +341,9 @@ def upload_file(request):
                 # Append results for the current sub-image
                 sub_images.append((sub_image_array, label,accuracy, output_filename, description, recommendation))
 
-        objects=read_text("urban_app/static/Output")
-        bri=objects.count("0")
-        fre=objects.count("1")
-        inter=objects.count("2")
-        rou=objects.count("3")
-
-        tlvl="None"
-        tfactor=fre+rou-inter-bri
-        if(tfactor==0):
-            tlvl="Average"
-        elif(tfactor>1):
-            tlvl="Good"
-        else:
-            tlvl="Poor"
         
-        print(tlvl)
         context = {
             "results": sub_images,
-            "tlvl": tlvl,
         }
 
         return render(request, 'resultpage.html', context)

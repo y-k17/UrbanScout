@@ -5,28 +5,106 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="{% static 'login.css' %}">
-  <script src="{% static 'login.js' %}"></script>
 
-  <link href='https://fonts.googleapis.com/css?family=Ubuntu:500' rel='stylesheet' type='text/css'>
+  <style>
+    body {
+      background-color: #f7e4d7;
+    }
+
+    .container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Full viewport height */
+    }
+
+    #login-header {
+      color: blue;
+      font-size: 3em;
+      margin-bottom: 30px;
+      animation: fadeInDown 1s ease;
+      text-align: center; /* Center align the text */
+    }
+
+    #login-form {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 1s ease;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px #007bff;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+
 </head>
-<body style="background-color: #f7e4d7;">
-	<h1 style="color:blue"><b>Urban<span style="color: red;">Scout</span></b></h1><br>
-  <br>
-<div class="container" id="container" style="margin-left: 500px;">
-	<div class="form-container sign-in-container">
-		<form action="{% url 'check_login' %}" method="POST">
-      {% csrf_token %}
-			<h1>Log in</h1><br>
-
-			<input style="background-color: beige;border: 2px solid gray;
-      border-radius: 4px;" type="text" name="username" placeholder="Username" required/>
-			<input style="background-color: beige;border: 2px solid gray;
-      border-radius: 4px;" type="password" name="password" placeholder="Password" required/>
+<body>
+  <div class="container">
+    <div id="login-form">
+      <br><br>
+      <h1 id="login-header"><b>Urban<span style="color: red;">Scout</span></b></h1>
       <br>
-			<input type="submit" class="btn btn-info" value="Log in"><br>
-		</form>
-	</div>
-
-</div>
-
+      <form action="{% url 'check_login' %}" method="POST">
+        {% csrf_token %}
+        <h2 style="text-align: center;">Log in</h2>
+        <br><br>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <br>
+        <input type="submit" class="btn btn-info" value="Log in">
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -4,10 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Home Admin</title>
+    <title>Welcome to UrbanScout</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="Free HTML Templates" name="keywords">
-    <meta content="Free HTML Templates" name="description">
+    <meta content="UrbanScout - Satellite Imagery for Urban Planning and Development" name="description">
 
     <!-- Favicon -->
     <link href="{% static 'img/favicon.ico' %}" rel="icon">
@@ -22,7 +21,6 @@
     <link href="{% static 'lib/flaticon/font/flaticon.css' %}" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
     <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
@@ -30,6 +28,41 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <style>
+        /* Custom CSS for Welcome Page */
+        #header-carousel .carousel-item {
+            height: 500px; /* Adjust the height as needed */
+            position: relative;
+        }
+
+        #header-carousel .carousel-caption {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        #header-carousel .carousel-caption h1 {
+            font-size: 3.5em; /* Increase font size for the heading */
+        }
+
+        #header-carousel .carousel-caption p {
+            font-size: 1.5em; /* Increase font size for the description */
+        }
+
+        /* Custom CSS for Features Section */
+        .card {
+            border: none; /* Remove borders from cards */
+            background-color: #f8f9fa; /* Set background color */
+            transition: transform 0.3s; /* Add transition effect */
+        }
+
+        .card:hover {
+            transform: translateY(-5px); /* Add slight hover effect */
+        }
+    </style>
 </head>
 
 <body>
@@ -37,41 +70,70 @@
     {% include 'admin_header.html' %}
     <!-- Navbar End -->
 
-
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5">
         <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" src="{% static 'img/my_img.png' %}" alt="Image">
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                    <img class="w-100" src="{% static 'img/my_img.png' %}" alt="Satellite Image">
+                    <div class="carousel-caption">
                         <div class="p-3" style="max-width: 900px;">
-                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Welcome</h1>
-                            <a href="{% url 'show_emergency' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Emergency Calling Numbers</a><br><br><br>
-
-                            
+                            <h1 class="display-1 text-white mb-md-4 animated zoomIn">Welcome to UrbanScout</h1>
+                            <p class="lead text-white mb-4 animated fadeInLeft">Empowering Urban Planning and Development through Satellite Imagery</p>
+                            <a href="#learn-more" class="btn btn-primary btn-lg animated fadeInRight">Learn More</a>
                         </div>
                     </div>
                 </div>
-              
-                
             </div>
-           
         </div>
     </div>
     <!-- Carousel End -->
 
+    <!-- About Section -->
+    <section id="learn-more" class="bg-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="text-primary mb-4">About UrbanScout</h2>
+                    <p class="lead">UrbanScout utilizes cutting-edge technology to analyze satellite imagery for urban planning and development purposes. Our platform offers features such as land cover classification, object detection, and more, providing valuable insights to urban planners, developers, and policymakers.</p>
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End About Section -->
 
-    
-    
-
-    {% include 'admin_footer.html' %}
-    <!-- Footer End -->
-
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Key Features</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card p-4">
+                        <h4 class="card-title text-primary">Land Cover Classification</h4>
+                        <p class="card-text">Automated classification of land cover types for detailed analysis of urban landscapes.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card p-4">
+                        <h4 class="card-title text-primary">Object Detection</h4>
+                        <p class="card-text">Detection of urban infrastructure objects such as bridges, freeways, roundabouts, and intersections.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card p-4">
+                        <h4 class="card-title text-primary">Actionable Insights</h4>
+                        <p class="card-text">Providing actionable recommendations for urban planning and development based on analysis results.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Features Section -->
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-secondary btn-lg-square rounded back-to-top"><i class="bi bi-arrow-up"></i></a>
-
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

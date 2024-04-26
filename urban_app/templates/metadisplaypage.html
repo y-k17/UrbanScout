@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Results</title>
+    <title>Metadata Results</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -29,58 +29,85 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
     <style>
+        /* Custom CSS for Metadata Result Page */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans', sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
             padding: 0;
         }
+
         .container {
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
+
         h1 {
             text-align: center;
             color: #007bff;
-        }
-        .result-info {
             margin-bottom: 20px;
         }
-        label {
-            font-weight: bold;
-            color: #555;
+
+        .metadata-info {
+            margin-top: 30px;
         }
-        span {
-            color: #007bff;
+
+        .metadata-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
         }
-        .description, .recommendation, .metadata {
-            margin-top: 20px;
+
+        .metadata-table th, .metadata-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
-        .image-heading {
-            text-align: center;
+
+        .metadata-table th {
+            background-color: #f2f2f2;
         }
+
+        .metadata-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .metadata-table tr:hover {
+            background-color: #f2f2f2;
+        }
+
         .image-container {
             display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
+            justify-content: center;
             margin-top: 20px;
         }
-        .image-item {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        img {
+
+        .image-item img {
             max-width: 400px;
             height: auto;
-            margin-bottom: 10px;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
         }
     </style>
 </head>
@@ -88,17 +115,25 @@
     {% include 'admin_header.html' %}
     <div class="container">
         <h1>Metadata</h1>
-            
+        
+        <div class="metadata-info">
+            <table class="metadata-table">
+                {% for key, value in info.items %}
+                <tr>
+                    <th>{{ key }}</th>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
+
         <div class="image-container">
             <div class="image-item">
                 <img src="{% static "uploaded_images\test_image.jpg" %}" alt="Processed Image">
             </div>
         </div>
-        <div class="recommendation">
-            <h2>Metadata:</h2>
-            <p>{{ info }}</p>
-        </div>
+        
+        <a class="back-link" href="{% url 'show_meta_page' %}">Back to Test Page</a>
     </div>
 </body>
 </html>
